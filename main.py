@@ -80,9 +80,62 @@ def day2():
     print(f"Total invalid IDs: {len(invalid_ids)}")
     print(f"Sum of invalid IDs: {total}")
     return total
+    
 
+def find_max_joltage_12(bank):
+    """
+    Find the maximum joltage from a bank by selecting exactly 12 batteries.
+    Uses a greedy approach: at each position, select the largest possible digit
+    while ensuring we can still select 12 digits total.
+    """
+    bank = bank.strip()  # Remove newline
+    n = len(bank)
+    target_count = 12
+    
+    if n < target_count:
+        return 0
+    
+    selected_digits = []
+    last_pos = -1
+    
+    # For each of the 12 positions we need to fill
+    for pos in range(target_count):
+        # We need to select (target_count - pos) more digits
+        # So we can look from (last_pos + 1) to (n - (target_count - pos))
+        start = last_pos + 1
+        end = n - (target_count - pos) + 1
+        
+        # Find the maximum digit in the allowed range
+        max_digit = -1
+        max_digit_pos = -1
+        for i in range(start, end):
+            digit = int(bank[i])
+            if digit > max_digit:
+                max_digit = digit
+                max_digit_pos = i
+        
+        selected_digits.append(str(max_digit))
+        last_pos = max_digit_pos
+    
+    # Convert the selected digits to a number
+    return int(''.join(selected_digits))
+
+def day3():
+    with open("day3.txt", "r") as file:
+        banks = file.readlines()
+    
+    total_joltage = 0
+    
+    for bank in banks:
+        max_jolt = find_max_joltage_12(bank)
+        total_joltage += max_jolt
+    
+    print(f"Total output joltage: {total_joltage}")
+    return total_joltage
+        
+        
 def main():
-    day2()
+    day3()
 
 if __name__ == "__main__":
     main()
